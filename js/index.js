@@ -36,8 +36,14 @@ const estatistica = document.querySelectorAll('[data-estatistica]');
 
 controle.forEach(elemento => {
   elemento.addEventListener('click', evento => {
-    manipulaEvento(evento.target.dataset.controle, evento.target.parentNode);
-    atualizaEstatistica(evento.target.dataset.peca);
+    if (
+      manipulaEvento(evento.target.dataset.controle, evento.target.parentNode)
+    ) {
+      atualizaEstatistica(
+        evento.target.dataset.peca,
+        evento.target.dataset.controle
+      );
+    }
   });
 });
 
@@ -46,16 +52,25 @@ function manipulaEvento(operacao, controle) {
 
   if (operacao === '+') {
     peca.value = parseInt(peca.value) + 1;
+  } else {
+    if (parseInt(peca.value) > 0) {
+      peca.value = parseInt(peca.value) - 1;
+    } else {
+      return false;
+    }
   }
-  if (operacao === '-') {
-    peca.value = parseInt(peca.value) - 1;
-  }
+  return true;
 }
 
-function atualizaEstatistica(peca) {
+function atualizaEstatistica(peca, operacao) {
   console.log(pecas[peca]);
   estatistica.forEach(evento => {
-    evento.innerText =
-      parseInt(evento.innerText) + pecas[peca][evento.dataset.estatistica];
+    if (operacao === '+') {
+      evento.innerText =
+        parseInt(evento.innerText) + pecas[peca][evento.dataset.estatistica];
+    } else {
+      evento.innerText =
+        parseInt(evento.innerText) - pecas[peca][evento.dataset.estatistica];
+    }
   });
 }
